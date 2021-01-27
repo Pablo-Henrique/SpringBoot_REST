@@ -1,5 +1,6 @@
 package com.springbootapi.springapi.controller;
 
+import com.springbootapi.springapi.dto.ProdutoDTO;
 import com.springbootapi.springapi.model.Produto;
 import com.springbootapi.springapi.service.ProdutoService;
 import org.springframework.beans.BeanUtils;
@@ -20,12 +21,12 @@ public class ProductController {
         this.produtoService = produtoService;
     }
 
-    @GetMapping
+    @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity<List<Produto>> getAllProducts() {
         return new ResponseEntity<>(produtoService.getProducts(), HttpStatus.OK);
     }
 
-    @GetMapping(path = "/{id}")
+    @RequestMapping(method = RequestMethod.GET, value = "/{id}")
     public ResponseEntity<Optional<Produto>> getId(@PathVariable Short id) {
 
         if (produtoService.existsId(id)) {
@@ -40,7 +41,7 @@ public class ProductController {
         return new ResponseEntity<>(produtoService.saveProducts(productModel), HttpStatus.CREATED);
     }
 
-    @DeleteMapping(path = "/{id}")
+    @RequestMapping(method = RequestMethod.DELETE, value = "/{id}")
     public ResponseEntity<?> deleteProduct(@PathVariable Short id) {
 
         if (!produtoService.existsId(id)) {
@@ -51,7 +52,7 @@ public class ProductController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PutMapping(path = "/{id}")
+    @RequestMapping(method = RequestMethod.PUT, value = "/{id}")
     public ResponseEntity<Produto> updateProduct(@PathVariable Short id, @RequestBody Produto productModel) {
 
         if (!produtoService.existsId(id) || this.produtoService.getOne(id) == null) {
@@ -60,5 +61,23 @@ public class ProductController {
         BeanUtils.copyProperties(productModel, this.produtoService, "id");
 
         return new ResponseEntity<>(this.produtoService.saveProducts(productModel), HttpStatus.OK);
+    }
+
+    @RequestMapping(method = RequestMethod.PATCH, value = "/{id}")
+    public ResponseEntity<?> partialUpdateName(@PathVariable("id") Short id, @RequestBody Produto produto) {
+
+        var product = this.produtoService.getById(id);
+
+        if(!product.isPresent()){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        produto = product.get();
+
+        if(produto.getId() != null) {
+            produto.setValor(produto.getValor());
+        }
+        this.produtoService.updatePartial(produto);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

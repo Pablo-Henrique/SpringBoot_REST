@@ -20,13 +20,13 @@ public class Produto implements Serializable {
     private String descricao;
 
     @Column(name = "Valor_Produto", nullable = false)
-    private long valor;
+    private Double valor;
 
     @Column(name = "Qtd_Produto", nullable = false)
     private int quantidade;
 
     // Getters, Setters and constructor
-    public Produto(Short id, String no, String desc, long valor, int qtd) {
+    public Produto(Short id, String no, String desc, Double valor, int qtd) {
         this.id = id;
         this.nome = no;
         this.descricao = desc;
@@ -34,20 +34,48 @@ public class Produto implements Serializable {
         this.quantidade = qtd;
     }
 
+    public Produto(){
+    }
+
     public Short getId() {
         return id;
+    }
+
+    public Produto setId(Short id) {
+        this.id = id;
+        return this;
     }
 
     public String getNome() {
         return nome;
     }
 
+    public Produto setNome(String nome) {
+        this.nome = nome;
+        return this;
+    }
+
     public String getDescricao() {
         return descricao;
     }
 
-    public long getValor() {
+    public Produto setDescricao(String descricao) {
+        this.descricao = descricao;
+        return this;
+    }
+
+    public Double getValor() {
         return valor;
+    }
+
+    public Produto setValor(Double valor) {
+        this.valor = valor;
+        return this;
+    }
+
+    public Produto setQuantidade(int quantidade) {
+        this.quantidade = quantidade;
+        return this;
     }
 
     public int getQuantidade() {
