@@ -11,22 +11,22 @@ public class Produto implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Short id;
+    private Long id;
 
-    @Column(name = "Nome_Produto", length = 255, nullable = false, unique = true)
+    @Column(name = "Nome_Produto", length = 255, nullable = false)
     private String nome;
 
-    @Column(name = "Descricao_Produto", length = 255, nullable = false, unique = true)
+    @Column(name = "Descricao_Produto", length = 255, nullable = false)
     private String descricao;
 
     @Column(name = "Valor_Produto", nullable = false)
     private Double valor;
 
     @Column(name = "Qtd_Produto", nullable = false)
-    private int quantidade;
+    private Integer quantidade;
 
     // Getters, Setters and constructor
-    public Produto(Short id, String no, String desc, Double valor, int qtd) {
+    public Produto(Long id, String no, String desc, Double valor, int qtd) {
         this.id = id;
         this.nome = no;
         this.descricao = desc;
@@ -34,14 +34,14 @@ public class Produto implements Serializable {
         this.quantidade = qtd;
     }
 
-    public Produto(){
+    public Produto() {
     }
 
-    public Short getId() {
+    public Long getId() {
         return id;
     }
 
-    public Produto setId(Short id) {
+    public Produto setId(Long id) {
         this.id = id;
         return this;
     }
@@ -73,13 +73,13 @@ public class Produto implements Serializable {
         return this;
     }
 
-    public Produto setQuantidade(int quantidade) {
-        this.quantidade = quantidade;
-        return this;
+    public Integer getQuantidade() {
+        return quantidade;
     }
 
-    public int getQuantidade() {
-        return quantidade;
+    public Produto setQuantidade(Integer quantidade) {
+        this.quantidade = quantidade;
+        return this;
     }
 
     @Override
