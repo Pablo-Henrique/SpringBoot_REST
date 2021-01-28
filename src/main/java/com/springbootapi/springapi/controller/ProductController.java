@@ -1,33 +1,32 @@
 package com.springbootapi.springapi.controller;
 
-import com.springbootapi.springapi.dto.ProdutoDTO;
 import com.springbootapi.springapi.model.Produto;
 import com.springbootapi.springapi.service.ProdutoService;
-import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/product")
 public class ProductController {
 
+
+    // Injeção Dependencia
     private ProdutoService produtoService;
 
     public ProductController(ProdutoService produtoService) {
         this.produtoService = produtoService;
     }
 
+
+    //Controllers
     @RequestMapping(method = RequestMethod.GET)
-    public ResponseEntity<List<Produto>> getAllProducts() {
-        return new ResponseEntity<>(produtoService.getProducts(), HttpStatus.OK);
+    public ResponseEntity<?> listProducts() {
+        return new ResponseEntity<>(produtoService.getAllProducts(), HttpStatus.OK);
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/{id}")
-    public ResponseEntity<Optional<Produto>> getId(@PathVariable Short id) {
+    public ResponseEntity<?> getId(@PathVariable Long id) {
 
         if (produtoService.existsId(id)) {
             return new ResponseEntity<>(produtoService.getById(id), HttpStatus.OK);
@@ -36,13 +35,13 @@ public class ProductController {
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    @PostMapping
-    public ResponseEntity<Produto> createProduct(@RequestBody Produto productModel) {
+    @RequestMapping(method = RequestMethod.POST)
+    public ResponseEntity<?> createProduct(@RequestBody Produto productModel) {
         return new ResponseEntity<>(produtoService.saveProducts(productModel), HttpStatus.CREATED);
     }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/{id}")
-    public ResponseEntity<?> deleteProduct(@PathVariable Short id) {
+    public ResponseEntity<?> deleteProduct(@PathVariable Long id) {
 
         if (!produtoService.existsId(id)) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -53,31 +52,51 @@ public class ProductController {
     }
 
     @RequestMapping(method = RequestMethod.PUT, value = "/{id}")
-    public ResponseEntity<Produto> updateProduct(@PathVariable Short id, @RequestBody Produto productModel) {
+    public ResponseEntity<?> updateProduct(@PathVariable Long id, @RequestBody Produto newProduct) {
 
-        if (!produtoService.existsId(id) || this.produtoService.getOne(id) == null) {
+        if (!produtoService.existsId(id)) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        BeanUtils.copyProperties(productModel, this.produtoService, "id");
+        return new ResponseEntity<>(this.produtoService.getById(id)
+                .map(oldProduct -> {
 
-        return new ResponseEntity<>(this.produtoService.saveProducts(productModel), HttpStatus.OK);
+                    oldProduct.setNome(newProduct.getNome());
+                    oldProduct.setDescricao(newProduct.getDescricao());
+                    oldProduct.setValor(newProduct.getValor());
+                    oldProduct.setQuantidade(newProduct.getQuantidade());
+                    return this.produtoService.saveProducts(oldProduct);
+
+                }).orElseGet(() -> {
+                    newProduct.getId();
+                    return this.produtoService.saveProducts(newProduct);
+                }), HttpStatus.OK);
     }
 
     @RequestMapping(method = RequestMethod.PATCH, value = "/{id}")
-    public ResponseEntity<?> partialUpdateName(@PathVariable("id") Short id, @RequestBody Produto produto) {
+    public ResponseEntity<?> partialUpdateName(@PathVariable("id") Long id, @RequestBody Produto produto) {
 
-        var product = this.produtoService.getById(id);
+        var identify = produtoService.getById(id);
 
-        if(!product.isPresent()){
+        if(!identify.isPresent()){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        }else {
 
-        produto = product.get();
+            Produto product = identify.get();
 
-        if(produto.getId() != null) {
-            produto.setValor(produto.getValor());
+            if(produto.getNome() != null) {
+                product.setNome(produto.getNome());
+            }
+            if(produto.getDescricao() != null) {
+                product.setDescricao(produto.getDescricao());
+            }
+            if(produto.getValor() != null) {
+                product.setValor(produto.getValor());
+            }
+            if(produto.getQuantidade() > 0) {
+                product.setQuantidade(produto.getQuantidade());
+            }
+            this.produtoService.saveProducts(product);
         }
-        this.produtoService.updatePartial(produto);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }
