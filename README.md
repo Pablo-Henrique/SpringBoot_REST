@@ -8,9 +8,11 @@ Spring é uma ferramenta open source para java/kotlin criada por Rod jhonson.
 O Spring Boot é uma ferramenta que visa facilitar o processo de configuração e publicação de aplicações que utilizem o ecossistema Spring.
 Com configurações rápidas, você consegue, por exemplo, disponibilizar uma aplicação baseada no Spring MVC, utilizando o Hibernate + JPA e o Thymeleaf como template engine.
 
-* Spring Boot Starter;
-* Spring Boot AutoConfigurator;
-* Spring Boot Actuator;
+* Spring Boot Starter
+* Spring Boot AutoConfigurator
+* Spring Boot Actuator
+* Spring Boot Hibernate
+* Spring Boot JPA
 
 ### Starter
 
@@ -24,6 +26,15 @@ O spring Boot ele identifica as configurações necessaria pelo tipo de aplicaç
 ### Actuator
 
 É uma ferramenta que permite ao programador, verificar oque esta acontecendo internamente em uma aplicação com o Spring boot
+
+### Hibernate
+
+Hibernate é uma ferramenta para mapeamento objeto/relacional para ambientes Java. O termo mapeamento objeto/relacional (ORM) refere-se à técnica de mapeamento de uma representação de dados em um modelo de objetos para um modelo de dados relacional baseado em um esquema E/R.
+
+### JPA 
+
+O Spring Data JPA é um framework que nasceu para facilitar a criação dos nossos repositórios.
+O Spring Data tem por objetivo facilitar nosso trabalho com persistência de dados de uma forma geral.
 
 -------------------------------------------------------------------------------------------------------------------------------
 
