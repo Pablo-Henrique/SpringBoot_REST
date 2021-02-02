@@ -1,11 +1,12 @@
 package com.springbootapi.springapi.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.springbootapi.springapi.controller.dto.ProdutoResource;
 import com.springbootapi.springapi.model.Produto;
 import com.springbootapi.springapi.repository.ProdutoRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -25,17 +26,19 @@ public class ProdutoService {
      *
      * @return Lista de Entidade
      */
-    public Collection<Produto> getAllProducts() {
+    public List<Produto> listAllProducts() {
         return this.produtoRepository.findAll();
     }
 
     /**
-     *  Retorna uma Entidade passada Pelo ID
+     * Retorna uma Entidade passada Pelo ID
      *
      * @param id identificador Key
      * @return Entidade Produto pelo ID
      */
     public Optional<Produto> getById(Long id) {
+
+
         return this.produtoRepository.findById(id);
     }
 
@@ -71,51 +74,51 @@ public class ProdutoService {
     /**
      * Faz uma Modificação em um Recurso ja Existente passado por ID
      *
-     * @param id identificador Key
-     * @param produto Objeto Entidade Relacional
+     * @param id              identificador Key
+     * @param produtoResource Objeto Entidade Relacional
      * @return Entidade Produto
      */
-    public Produto updateProduto(Long id, Produto produto) {
+    public Produto updateProduto(Long id, ProdutoResource produtoResource) {
 
         this.produtoRepository.findById(id)
                 .map(oldProduct -> {
-                    oldProduct.setNome(produto.getNome());
-                    oldProduct.setDescricao(produto.getDescricao());
-                    oldProduct.setValor(produto.getValor());
-                    oldProduct.setQuantidade(produto.getQuantidade());
+                    oldProduct.setNome(produtoResource.getNome());
+                    oldProduct.setDescricao(produtoResource.getDescricao());
+                    oldProduct.setValor(produtoResource.getValor());
+                    oldProduct.setQuantidade(produtoResource.getQuantidade());
                     return this.produtoRepository.save(oldProduct);
 
                 }).get();
-        return this.objectMapper.convertValue(produto, Produto.class);
+        return this.objectMapper.convertValue(produtoResource, Produto.class);
     }
 
     /**
      * Faz uma Modificação Parcial em um Recurso Existente
      *
-     * @param id identificador Key
-     * @param produto Objeto Entidade Relacional
+     * @param id              Identificador Key
+     * @param produtoResource Objeto Entidade Relacional
      * @return Entidade Produto
      */
-    public Produto partialUpdate(Long id, Produto produto) {
+    public Produto partialUpdate(Long id, ProdutoResource produtoResource) {
 
-        var entity = this.produtoRepository.findById(id).orElseGet(Produto::new);
+        this.produtoRepository.findById(id).map(produto -> {
 
-        if (!entity.getNome().equalsIgnoreCase(produto.getNome())) {
-            entity.setNome(produto.getNome());
-        }
+            if (!(produtoResource.getNome() == null)) {
+                produto.setNome(produtoResource.getNome());
+            }
+            if (!(produtoResource.getDescricao() == null)) {
+                produto.setDescricao(produtoResource.getDescricao());
+            }
+            if (!(produtoResource.getValor() == null)) {
+                produto.setValor(produtoResource.getValor());
+            }
+            if (!(produtoResource.getQuantidade() == null)) {
+                produto.setQuantidade(produtoResource.getQuantidade());
+            }
+            return this.produtoRepository.save(produto);
 
-        if (!entity.getDescricao().equalsIgnoreCase(produto.getDescricao())) {
-            entity.setDescricao(produto.getDescricao());
-        }
+        }).get();
 
-        if (!entity.getValor().equals(produto.getValor())) {
-            entity.setValor(produto.getValor());
-        }
-
-        if (!entity.getQuantidade().equals(produto.getQuantidade())) {
-            entity.setQuantidade(produto.getQuantidade());
-        }
-
-        return this.produtoRepository.save(entity);
+        return this.objectMapper.convertValue(produtoResource, Produto.class);
     }
 }
