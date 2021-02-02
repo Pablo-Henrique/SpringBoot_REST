@@ -1,6 +1,9 @@
 package com.springbootapi.springapi.controller.dto;
 
+import com.springbootapi.springapi.model.Produto;
+
 import javax.validation.constraints.NotBlank;
+import java.util.function.Predicate;
 
 public class ProdutoResource {
 
@@ -19,6 +22,30 @@ public class ProdutoResource {
     @NotBlank(message = "Quantidade Obrigatorio")
     private Integer quantidade;
 
+    // Contructor and Methods
+    public ProdutoResource(Long id, String nome, String descricao, Double valor, Integer quantidade) {
+        this.id = id;
+        this.nome = nome;
+        this.descricao = descricao;
+        this.valor = valor;
+        this.quantidade = quantidade;
+    }
+
+    public ProdutoResource() {
+    }
+
+    public static ProdutoResource converter(Produto produto) {
+        var produtoRs = new ProdutoResource();
+
+        produtoRs.setNome(produto.getNome());
+        produtoRs.setDescricao(produto.getDescricao());
+        produtoRs.setValor(produto.getValor());
+        produtoRs.setQuantidade(produto.getQuantidade());
+        return produtoRs;
+    }
+
+
+    // Getters and Setters
     public Long getId() {
         return id;
     }
