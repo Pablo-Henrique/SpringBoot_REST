@@ -1,8 +1,8 @@
-package com.springbootapi.springapi.controller;
+package com.springbootapi.springapi.endpoint.controller;
 
-import com.springbootapi.springapi.controller.dto.ProdutoResource;
+import com.springbootapi.springapi.endpoint.dto.ProdutoResource;
+import com.springbootapi.springapi.endpoint.service.ProdutoService;
 import com.springbootapi.springapi.model.Produto;
-import com.springbootapi.springapi.service.ProdutoService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,20 +10,15 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/product")
+@RequestMapping(value = "/products")
 public class ProductController {
 
-    // Injeção Dependencia
     private ProdutoService produtoService;
 
     public ProductController(ProdutoService produtoService) {
         this.produtoService = produtoService;
     }
 
-    /*
-        @Get Requisita um representação do recurso especificado
-        (O mesmo recurso pode ter várias representações, ao exemplo de serviços que retornam XML e JSON)
-     */
     @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity<?> listProducts() {
         return new ResponseEntity<>(produtoService.listAllProducts(), HttpStatus.OK);
@@ -34,24 +29,17 @@ public class ProductController {
 
         if (!produtoService.existsId(id)) {
             new ResponseEntity<>(HttpStatus.NOT_FOUND);
-
         }
 
         return new ResponseEntity<>(produtoService.getById(id), HttpStatus.OK);
     }
 
-    /*
-        @Post Envia uma entidade e requisita que o servidor aceita-a como subordinada do recurso identificado pela URI.
-     */
     @RequestMapping(method = RequestMethod.POST)
     public ResponseEntity<?> createProduct(@RequestBody Produto produto) {
 
         return new ResponseEntity<>(produtoService.saveProducts(produto), HttpStatus.CREATED);
     }
 
-    /*
-        @Delete Apaga o recurso especificado
-     */
     @RequestMapping(method = RequestMethod.DELETE, value = "/{id}")
     public ResponseEntity<?> deleteProduct(@PathVariable Long id) {
 
@@ -60,26 +48,18 @@ public class ProductController {
         }
         this.produtoService.deleteId(id);
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    /*
-        @Put Requisita que um entidade seja armazenada embaixo da URI fornecida.
-        Se a URI se refere a um recurso que já existe, ele é modificado; se a URI não aponta para um recurso existente,
-        então o servidor pode criar o recurso com essa URI.
-     */
     @RequestMapping(method = RequestMethod.PUT, value = "/{id}")
     public ResponseEntity<?> updateProduct(@PathVariable Long id, @RequestBody @Valid ProdutoResource newProductResource) {
 
         if (!produtoService.existsId(id)) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(this.produtoService.updateProduto(id, newProductResource), HttpStatus.OK);
+        return new ResponseEntity<>(this.produtoService.updateProduto(id, newProductResource), HttpStatus.NO_CONTENT);
     }
 
-    /*
-        @Patch Usado para aplicar modificações parciais a um recurso.
-     */
     @RequestMapping(method = RequestMethod.PATCH, value = "/{id}")
     public ResponseEntity<?> partialUpdate(@PathVariable("id") Long id, @RequestBody ProdutoResource produtoResource) {
 
@@ -89,6 +69,7 @@ public class ProductController {
 
         return new ResponseEntity<>(this.produtoService.partialUpdate(id, produtoResource), HttpStatus.OK);
     }
+
 }
 
 

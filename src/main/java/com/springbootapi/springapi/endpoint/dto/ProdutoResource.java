@@ -1,9 +1,8 @@
-package com.springbootapi.springapi.controller.dto;
+package com.springbootapi.springapi.endpoint.dto;
 
 import com.springbootapi.springapi.model.Produto;
 
 import javax.validation.constraints.NotBlank;
-import java.util.function.Predicate;
 
 public class ProdutoResource {
 

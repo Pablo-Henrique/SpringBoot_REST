@@ -1,7 +1,7 @@
-package com.springbootapi.springapi.service;
+package com.springbootapi.springapi.endpoint.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.springbootapi.springapi.controller.dto.ProdutoResource;
+import com.springbootapi.springapi.endpoint.dto.ProdutoResource;
 import com.springbootapi.springapi.model.Produto;
 import com.springbootapi.springapi.repository.ProdutoRepository;
 import org.springframework.stereotype.Service;
@@ -27,6 +27,7 @@ public class ProdutoService {
      * @return Lista de Entidade
      */
     public List<Produto> listAllProducts() {
+
         return this.produtoRepository.findAll();
     }
 
@@ -37,8 +38,6 @@ public class ProdutoService {
      * @return Entidade Produto pelo ID
      */
     public Optional<Produto> getById(Long id) {
-
-
         return this.produtoRepository.findById(id);
     }
 
