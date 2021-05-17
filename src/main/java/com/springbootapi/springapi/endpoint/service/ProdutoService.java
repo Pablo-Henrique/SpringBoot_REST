@@ -15,7 +15,7 @@ public class ProdutoService {
     private ProdutoRepository produtoRepository;
     private ObjectMapper objectMapper;
 
-    public ProdutoService(ProdutoRepository produtoRepository, ObjectMapper objectMapper) {
+    private ProdutoService(ProdutoRepository produtoRepository, ObjectMapper objectMapper) {
 
         this.produtoRepository = produtoRepository;
         this.objectMapper = objectMapper;
@@ -27,7 +27,6 @@ public class ProdutoService {
      * @return Lista de Entidade
      */
     public List<Produto> listAllProducts() {
-
         return this.produtoRepository.findAll();
     }
 
@@ -67,7 +66,7 @@ public class ProdutoService {
      * @return Boolean (true) - ID existe, (false) ID não existe
      */
     public boolean existsId(Long id) {
-        return this.produtoRepository.existsById(id);
+        return !this.produtoRepository.existsById(id);
     }
 
     /**
