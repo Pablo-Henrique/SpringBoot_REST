@@ -4,13 +4,14 @@ import com.springbootapi.springapi.endpoint.dto.ProdutoResource;
 import com.springbootapi.springapi.endpoint.service.ProdutoService;
 import com.springbootapi.springapi.model.Produto;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping(value = {"/products"})
+@RequestMapping(value = {"/products"}, produces = MediaType.APPLICATION_JSON_VALUE)
 public class ProductController {
 
     private ProdutoService produtoService;
@@ -19,7 +20,7 @@ public class ProductController {
         this.produtoService = produtoService;
     }
 
-    @RequestMapping(method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(method = RequestMethod.GET)
     public ResponseEntity<?> listProducts() {
         return new ResponseEntity<>(produtoService.listAllProducts(), HttpStatus.OK);
     }
@@ -33,7 +34,7 @@ public class ProductController {
         return new ResponseEntity<>(produtoService.getById(id), HttpStatus.OK);
     }
 
-    @RequestMapping(method = RequestMethod.POST)
+    @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> createProduct(@RequestBody Produto produto) {
         return new ResponseEntity<>(produtoService.saveProducts(produto), HttpStatus.CREATED);
     }

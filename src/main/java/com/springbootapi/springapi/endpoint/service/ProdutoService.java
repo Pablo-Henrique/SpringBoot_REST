@@ -86,7 +86,7 @@ public class ProdutoService {
                     oldProduct.setQuantidade(produtoResource.getQuantidade());
                     return this.produtoRepository.save(oldProduct);
 
-                }).get();
+                });
         return this.objectMapper.convertValue(produtoResource, Produto.class);
     }
 
@@ -115,8 +115,7 @@ public class ProdutoService {
             }
             return this.produtoRepository.save(produto);
 
-        }).get();
-
+        });
         return this.objectMapper.convertValue(produtoResource, Produto.class);
     }
 }
